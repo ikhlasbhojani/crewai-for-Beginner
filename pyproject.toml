@@ -1,0 +1,28 @@
+[project]
+name = "flow-crewai"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "ikhlasbhojani", email = "119949709+ikhlasbhojani@users.noreply.github.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "crewai>=0.100.1",
+    "litellm>=1.59.8",
+    "python-dotenv>=1.0.1",
+]
+
+[project.scripts]
+flow-crewai = "flow_crewai:main"
+simple-flow = "flow_crewai.simple_flow:kickoff"
+prompt_chaining_flow = "flow_crewai.prompt_chaining_flow:run_prompt_chaining_flow"
+router_flow = "flow_crewai.router_flow:main"
+parallel_flow ="flow_crewai.parallel_flow:main"
+orchestrator_flow ="flow_crewai.orchestrator_flow:main"
+agent_flow ="flow_crewai.agent_flow:main"
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
