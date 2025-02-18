@@ -61,6 +61,24 @@ uv run [variable_name]
 
 ---
 
+## **🔍 CrewAI Graphs **
+
+### Simple Flow Graph
+![Simple Flow](./images/simple_flow.png)
+
+### Router Flow Graph
+![Router Flow](./images/router_flow.png)
+
+### Parallel Flow Graph
+![Parallel Flow](./images/parallel_flow.png)
+
+### Orchestrator Flow Graph
+![Orchestrator Flow](./images/orchestrator_flow.png)
+
+### Evaluator Flow Graph
+![Evaluator Flow](./images/evaluator_flow.png)
+
+
 ## **📚 Learn More & Contribute**
 
 🔗 **GitHub Repo:** [CrewAI for Beginners](https://github.com/ikhlasbhojani/crewai-for-Beginner.git)  

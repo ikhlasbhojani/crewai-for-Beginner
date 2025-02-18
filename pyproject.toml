@@ -14,14 +14,12 @@ dependencies = [
 ]
 
 [project.scripts]
-flow-crewai = "flow_crewai:main"
-simple-flow = "flow_crewai.simple_flow:kickoff"
-prompt_chaining_flow = "flow_crewai.prompt_chaining_flow:run_prompt_chaining_flow"
+simple_flow = "flow_crewai.simple_flow:main"
 router_flow = "flow_crewai.router_flow:main"
 parallel_flow ="flow_crewai.parallel_flow:main"
 orchestrator_flow ="flow_crewai.orchestrator_flow:main"
 agent_flow ="flow_crewai.agent_flow:main"
-
+evaluator_flow ="flow_crewai.evaluator_flow:main"
 
 [build-system]
 requires = ["hatchling"]

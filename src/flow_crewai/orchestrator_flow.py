@@ -1,80 +1,46 @@
+from crewai.flow.flow import Flow, start, listen, or_, router, and_
 
-from crewai.flow.flow import Flow, start, listen
-from litellm import completion  # Replace with your LLM API client
-from dotenv import load_dotenv, find_dotenv
-
-_:bool = load_dotenv(find_dotenv())
-
-class OrchestratorWorkersFlow(Flow):
-
+class OrchestratorFlow(Flow):
 
     @start()
-    def initial_task(self):
-        """
-        The orchestrator's starting point:
-        - Receives a complex problem description.
-        - Dynamically breaks it down into subtasks.
-        """
-        problem_description = "Analyze the code for potential vulnerabilities and suggest improvements."
-        print("Orchestrator received problem:", problem_description)
-        # Dynamically define subtasks (in practice, these could be generated via an LLM)
-        subtasks = [
-            "Identify potential security vulnerabilities in the code.",
-            "Recommend improvements for code efficiency.",
-            "Suggest best practices for error handling."
-        ]
-        self.state["subtasks"] = subtasks
-        return problem_description
+    def IN(self):
+        # Starting point of the flow.
+        print("IN")
+        return "initial input"
 
-    @listen(initial_task)
-    def delegate_subtasks(self, problem_description):
-        """
-        The orchestrator delegates each subtask to a worker function.
-        In this simple example, we iterate through the subtasks,
-        call a worker for each, and collect the results.
-        """
-        subtasks = self.state.get("subtasks", [])
-        results = []
-        for task in subtasks:
-            # Delegate the subtask to the worker function and collect its result
-            result = self.worker_task(task)
-            results.append(result)
-        # Save the worker outputs in state for synthesis
-        self.state["worker_results"] = results
-        return results
+    @listen("IN")
+    def orchestrator(self, inp):
+        print("give some instructions")
+        # Return some instructions (or simply pass along the data)
+        return "instructions"
 
-    def worker_task(self, subtask):
-        """
-        Worker function simulating the processing of a subtask.
-        Each worker could be an independent LLM call or a specialized agent.
-        """
-        print("Worker processing subtask:", subtask)
-        # Create a prompt for the worker to address the subtask
-        prompt = f"Please address the following task: {subtask}"
-        # Call the LLM (or another agent) to generate an answer for this subtask
-        response = completion(
-            model="gemini/gemini-1.5-flash",
-            messages=[{"role": "user", "content": prompt}]
-        )
-        # Extract the worker's output from the response
-        worker_output = response["choices"][0]["message"]["content"].strip()
-        print("Worker output:", worker_output)
-        return worker_output
+    @listen(and_(orchestrator))
+    def LLM1(self, instructions):
+        print("LLM1")
+        return "LLM1 result"
+    
+    @listen(and_(orchestrator))
+    def LLM2(self, instructions):
+        print("LLM2")
+        return "LLM2 result"
+    
+    @listen(and_(orchestrator))
+    def LLM3(self, instructions):
+        print("LLM3")
+        return "LLM3 result"
 
-    @listen(delegate_subtasks)
-    def synthesize_results(self, worker_results):
-        """
-        The orchestrator synthesizes the outputs from all workers into one final report.
-        """
-        synthesized = "Synthesized Report:\n"
-        for idx, output in enumerate(worker_results, start=1):
-            synthesized += f"Subtask {idx}: {output}\n"
-        print(synthesized)
-        return synthesized
+    @listen(and_("LLM1", "LLM2", "LLM3"))
+    def synthesizer(self, results):
+        print("aggregate results", results)
+        # Combine the results as needed
+        return "aggregated results"
 
-
+    @listen("synthesizer")
+    def OUT(self, aggregated):
+        print("OUT", aggregated)
+        return None  # Terminal node, so we return None
 
 def main():
-    flow = OrchestratorWorkersFlow()
+    flow = OrchestratorFlow()
     flow.kickoff()
     flow.plot()
